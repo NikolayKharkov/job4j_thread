@@ -8,24 +8,33 @@ import java.net.URL;
 public class WgetLoad implements Runnable {
     private final String url;
     private final int speed;
-    private static final int TIMECONST = 5;
+    private final String fileName;
 
-    public WgetLoad(String url, int speed) {
+    public WgetLoad(String url, int speed, String fileName) {
         this.url = url;
         this.speed = speed;
+        this.fileName = fileName;
     }
 
     @Override
     public void run() {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
+             FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
-            int timeDelay = speed <= TIMECONST ? 1000 * speed : 1000;
+            long bytesWrited = 0;
+            long start = System.currentTimeMillis();
             try {
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    bytesWrited += bytesRead;
+                    long deltaTime = System.currentTimeMillis() - start;
+                    if (bytesWrited >= speed) {
+                        bytesWrited = 0;
+                        if (deltaTime < 1000) {
+                            Thread.sleep(1000 - deltaTime);
+                        }
+                    }
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
-                    Thread.sleep(timeDelay);
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -35,11 +44,14 @@ public class WgetLoad implements Runnable {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) throws InterruptedException {
+        if (args.length != 2) {
+            throw new InterruptedException("Incorrect number of arguments!");
+        }
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
-        Thread wget = new Thread(new WgetLoad(url, speed));
+        String fileName = url.substring(url.lastIndexOf("/") + 1).trim();
+        Thread wget = new Thread(new WgetLoad(url, speed, fileName));
         wget.start();
         wget.join();
     }
