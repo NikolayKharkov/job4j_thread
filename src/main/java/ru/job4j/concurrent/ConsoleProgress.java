@@ -15,6 +15,7 @@ public class ConsoleProgress implements Runnable {
                 System.out.print("\r load: " + partsStar[count++]);
             }
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
     }
@@ -22,8 +23,9 @@ public class ConsoleProgress implements Runnable {
     public static void main(String[] args) throws InterruptedException {
         Thread progress = new Thread(new ConsoleProgress());
         progress.start();
-        Thread.sleep(10000000);
+        Thread.sleep(1000);
         progress.interrupt();
+        progress.join();
     }
 }
 
