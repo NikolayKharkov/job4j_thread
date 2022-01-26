@@ -31,9 +31,9 @@ public class WgetLoad implements Runnable {
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                     bytesWrited += bytesRead;
-                    long deltaTime = System.currentTimeMillis() - start;
                     if (bytesWrited >= speed) {
                         bytesWrited = 0;
+                        long deltaTime = System.currentTimeMillis() - start;
                         if (deltaTime < 1000) {
                             Thread.sleep(1000 - deltaTime);
                         }
