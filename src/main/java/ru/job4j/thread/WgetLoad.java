@@ -3,7 +3,10 @@ package ru.job4j.thread;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 public class WgetLoad implements Runnable {
     private final String url;
@@ -30,6 +33,7 @@ public class WgetLoad implements Runnable {
                     long deltaTime = System.currentTimeMillis() - start;
                     if (bytesWrited >= speed) {
                         bytesWrited = 0;
+                        start = System.currentTimeMillis();
                         if (deltaTime < 1000) {
                             Thread.sleep(1000 - deltaTime);
                         }
@@ -44,13 +48,18 @@ public class WgetLoad implements Runnable {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) throws InterruptedException {
-        if (args.length != 2) {
+
+    public static void validator(int args) throws InterruptedException {
+        if (args != 2) {
             throw new InterruptedException("Incorrect number of arguments!");
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException, URISyntaxException {
+        validator(args.length);
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
-        String fileName = url.substring(url.lastIndexOf("/") + 1).trim();
+        String fileName = Paths.get(new URI(url).getPath()).getFileName().toString();
         Thread wget = new Thread(new WgetLoad(url, speed, fileName));
         wget.start();
         wget.join();
