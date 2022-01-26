@@ -9,7 +9,7 @@ public class UserStore {
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 
     public boolean add(User user) {
-        return users.putIfAbsent(user.getId(), user) != null;
+        return users.putIfAbsent(user.getId(), user) == null;
     }
 
     public boolean delete(User user) {
