@@ -29,16 +29,16 @@ public class WgetLoad implements Runnable {
             long start = System.currentTimeMillis();
             try {
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
                     bytesWrited += bytesRead;
                     long deltaTime = System.currentTimeMillis() - start;
                     if (bytesWrited >= speed) {
                         bytesWrited = 0;
-                        start = System.currentTimeMillis();
                         if (deltaTime < 1000) {
                             Thread.sleep(1000 - deltaTime);
                         }
                     }
-                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                    start = System.currentTimeMillis();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
