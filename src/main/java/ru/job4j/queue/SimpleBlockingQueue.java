@@ -27,24 +27,4 @@ public class SimpleBlockingQueue<T> {
         }
         return queue.poll();
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
-        Thread maker = new Thread(() -> {
-            for (int i = 0; i != 3; i++) {
-                queue.offer(i);
-            }
-        });
-
-        Thread consumer = new Thread(() -> {
-            for (int i = 0; i != 2; i++) {
-                queue.poll();
-            }
-        });
-        maker.start();
-        consumer.start();
-        maker.join();
-        consumer.join();
-        System.out.println(queue.poll());
-    }
 }
