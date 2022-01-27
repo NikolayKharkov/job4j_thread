@@ -12,7 +12,20 @@ public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private Queue<T> queue = new LinkedList<>();
 
+    private final int size;
+
+    public SimpleBlockingQueue(int maxSize) {
+        this.size = maxSize;
+    }
+
     public synchronized void offer(T value) {
+        if (queue.size() == size) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         queue.offer(value);
         notify();
     }
@@ -25,6 +38,7 @@ public class SimpleBlockingQueue<T> {
                 e.printStackTrace();
             }
         }
+        notify();
         return queue.poll();
     }
 }

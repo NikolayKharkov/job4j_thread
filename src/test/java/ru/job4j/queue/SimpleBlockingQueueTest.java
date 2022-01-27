@@ -9,7 +9,7 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenMakerAddThreeElementsConsumerTakeTwoElements() throws InterruptedException {
-        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(3);
         Thread maker = new Thread(() -> {
             for (int i = 0; i != 3; i++) {
                 queue.offer(i);
