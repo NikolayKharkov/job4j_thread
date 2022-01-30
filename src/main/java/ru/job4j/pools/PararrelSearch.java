@@ -1,6 +1,5 @@
 package ru.job4j.pools;
 
-import java.util.Arrays;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
@@ -9,44 +8,41 @@ public class PararrelSearch<T> extends RecursiveTask<Integer> {
     private final T[] objects;
     private final T targetObject;
     private static final int OPTIONALLENGTH = 10;
+    private final int from;
+    private final int to;
 
-    public PararrelSearch(T[] objects, T targetObject) {
+    public PararrelSearch(T[] objects, T targetObject, int from, int to) {
         this.objects = objects;
         this.targetObject = targetObject;
+        this.from = from;
+        this.to = to;
     }
 
     @Override
     protected Integer compute() {
-        Integer result = -1;
         int length = objects.length;
-        if (length <= OPTIONALLENGTH) {
-            for (int i = 0; i != length; i++) {
+        if (to - from <= OPTIONALLENGTH) {
+            for (int i = from; i != to; i++) {
                 if (objects[i].equals(targetObject)) {
-                    result = i;
-                    break;
+                    return i;
                 }
             }
-        } else {
-            int mid = length / 2;
-            PararrelSearch<T> firstHalf =
-                    new PararrelSearch(Arrays.copyOfRange(objects, 0, mid), targetObject);
-            PararrelSearch<T> secondHalf =
-                    new PararrelSearch(Arrays.copyOfRange(objects, mid, length), targetObject);
-            firstHalf.fork();
-            secondHalf.fork();
-            int first = firstHalf.join();
-            int second = secondHalf.join();
-            if (first == -1 && second == -1) {
-                result = -1;
-            } else {
-                result = first == -1 ? second + mid : first;
-            }
+            return -1;
         }
-        return result;
+        int mid = length / 2;
+        PararrelSearch<T> firstHalf =
+                new PararrelSearch(objects, targetObject, from, mid);
+        PararrelSearch<T> secondHalf =
+                new PararrelSearch(objects, targetObject, mid + 1, to);
+        firstHalf.fork();
+        secondHalf.fork();
+        int first = firstHalf.join();
+        int second = secondHalf.join();
+        return first == -1 ? second : first;
     }
 
-    public static <V> int findTarget(V[] objects, V targetObject) {
+    public static <V> int findTargetIndex(V[] objects, V targetObject) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new PararrelSearch<V>(objects, targetObject));
+        return forkJoinPool.invoke(new PararrelSearch<>(objects, targetObject, 0, objects.length - 1));
     }
 }

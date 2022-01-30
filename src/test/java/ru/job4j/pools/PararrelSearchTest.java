@@ -8,23 +8,23 @@ public class PararrelSearchTest {
     @Test
     public void whenArrayBelowTenAndFind() {
         String[] objects = {"0", "1", "2", "3", "4", "5", "6", "7"};
-        Assert.assertEquals(4, PararrelSearch.findTarget(objects, "4"));
+        Assert.assertEquals(4, PararrelSearch.findTargetIndex(objects, "4"));
     }
 
     @Test
     public void whenArrayBelowTenAndNotFind() {
         String[] objects = {"0", "1", "2", "3", "4", "5", "6", "7"};
-        Assert.assertEquals(-1, PararrelSearch.findTarget(objects, "fgfgfg"));
+        Assert.assertEquals(-1, PararrelSearch.findTargetIndex(objects, "fgfgfg"));
     }
 
     @Test
     public void whenArrayMoreTenAndFind() {
         String[] objects = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
-        Assert.assertEquals(13, PararrelSearch.findTarget(objects, "13"));
+        Assert.assertEquals(13, PararrelSearch.findTargetIndex(objects, "13"));
     }
     @Test
     public void whenArrayMoreTenAndNotFind() {
         String[] objects = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
-        Assert.assertEquals(-1, PararrelSearch.findTarget(objects, "-14"));
+        Assert.assertEquals(-1, PararrelSearch.findTargetIndex(objects, "-14"));
     }
 }
