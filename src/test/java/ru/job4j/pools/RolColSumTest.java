@@ -1,9 +1,7 @@
 package ru.job4j.pools;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static org.hamcrest.core.Is.is;
@@ -26,7 +24,7 @@ public class RolColSumTest {
     }
 
     @Test
-    public void whenSumSyncMethod() throws ExecutionException, InterruptedException{
+    public void whenSumSyncMethod() throws ExecutionException, InterruptedException {
         int[][] array = {
                 {4, 2, 3},
                 {7, 1, 5},
