@@ -21,6 +21,6 @@ public class ThreadState {
         }
         System.out.println(first.getState());
         System.out.println(second.getState());
-        System.out.println("Program has finish!");
+        System.out.println("Program finished!");
     }
 }
